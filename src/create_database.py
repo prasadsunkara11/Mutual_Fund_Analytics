@@ -43,4 +43,36 @@ result = pd.read_sql(
 
 print(result)
 
+
+historical_nav = pd.read_csv(
+    "data/processed/historical_nav.csv"
+)
+
+historical_nav.to_sql(
+    "historical_nav",
+    conn,
+    if_exists="replace",
+    index=False
+)
+tables = [
+    "schemes",
+    "nav_history",
+    "historical_nav"
+]
+
+for table in tables:
+
+    query = f"""
+    SELECT COUNT(*)
+    AS records
+    FROM {table}
+    """
+
+    count = pd.read_sql(
+        query,
+        conn
+    )
+
+    print(f"\n{table}")
+    print(count)
 conn.close()
